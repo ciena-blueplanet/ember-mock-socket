@@ -1,0 +1,56 @@
+{
+  "name": "ember-mock-socket",
+  "version": "0.0.0",
+  "description": "Ember shim for mock-socket",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "ember build",
+    "lint": "npm run lint-js",
+    "lint-js": "eslint addon app blueprints config tests *.js",
+    "start": "ember server",
+    "test": "npm run lint && ember test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ciena-blueplanet/ember-mock-socket.git"
+  },
+  "engines": {
+    "node": ">= 5.0.0"
+  },
+  "author": "Matthew Dahl (https://github.com/sandersky)",
+  "license": "MIT",
+  "devDependencies": {
+    "broccoli-asset-rev": "^2.4.6",
+    "ember-cli": "2.8.0",
+    "ember-cli-app-version": "^2.0.0",
+    "ember-cli-dependency-checker": "^1.2.0",
+    "ember-cli-htmlbars": "^1.0.11",
+    "ember-cli-htmlbars-inline-precompile": "^0.3.4",
+    "ember-cli-inject-live-reload": "^1.4.0",
+    "ember-cli-mocha": "0.10.4",
+    "ember-cli-test-loader": "^1.1.0",
+    "ember-cli-uglify": "^1.2.0",
+    "ember-disable-prototype-extensions": "^1.1.0",
+    "ember-export-application-global": "^1.0.5",
+    "ember-load-initializers": "^0.5.1",
+    "ember-resolver": "^2.0.3",
+    "eslint": "^3.3.1",
+    "eslint-config-frost-standard": "^4.0.0",
+    "loader.js": "^4.0.11",
+    "mock-socket": "^3.0.1"
+  },
+  "keywords": [
+    "ember-addon",
+    "mock-socket"
+  ],
+  "dependencies": {
+    "broccoli-merge-trees": "^1.0.0",
+    "ember-cli-babel": "^5.1.6"
+  },
+  "ember-addon": {
+    "configPath": "tests/dummy/config"
+  }
+}

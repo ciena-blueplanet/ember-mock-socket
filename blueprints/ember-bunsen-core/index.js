@@ -1,7 +1,7 @@
 module.exports = {
   afterInstall: function () {
     return this.addPackagesToProject([
-      {name: 'mock-socket', target: '^3.0.1'}
+      {name: 'mock-socket', target: '^6.0.1'}
     ])
   },
 

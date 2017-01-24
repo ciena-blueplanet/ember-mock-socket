@@ -1,6 +1,6 @@
 {
   "name": "ember-mock-socket",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ember shim for mock-socket",
   "directories": {
     "doc": "doc",

@@ -1,3 +1,8 @@
+# 0.1.2
+
+* **Fixed** blueprint as it was using the wrong name.
+
+
 # 0.1.1
 
 * **Upgraded** to test against Ember 2.11.

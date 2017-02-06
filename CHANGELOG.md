@@ -1,3 +1,8 @@
+# 0.1.3
+
+* **Updated** CI to test both Chrome and Firefox.
+
+
 # 0.1.2
 
 * **Fixed** blueprint as it was using the wrong name.

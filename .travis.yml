@@ -1,12 +1,11 @@
 sudo: required
 dist: trusty
 language: node_js
+
 node_js:
-  - '5.0'
-  - 'stable'
-branches:
-  except:
-  - /^v[0-9\.]+/
+- '6.9'
+- 'stable'
+
 addons:
   apt:
     sources:
@@ -15,6 +14,8 @@ addons:
     packages:
     - google-chrome-stable
     - g++-4.8
+  firefox: 'latest-esr'
+
 env:
   matrix:
   - EMBER_TRY_SCENARIO=ember-1-12
@@ -37,30 +38,30 @@ env:
   global:
     - CXX=g++-4.8
     - secure: MSIko0iv+9vjb6Q+hKrSMQSXWSrfkiTIe/8gkGyGkVnMZUI+tMF746M4RpOI/dA4dahxbm77aC0LfkeRU9oilr8SrvOVvLOYw3ihRRsjL3qgVFXJpuXpnEzgrmxpVL1gn3pkPmWFgfEP1EhavpKIMS1NKUtP6Xf6VDtSqjvYjxs683VrbtBhvia1Rtt2HpirRRC2kU86DquVqwlUAU7puRiuSZtsJnpGi0R3hDfcerwzh4ZTOdxDBGA3udQZBCkFI1PIMz2izreYvkfWEDs5uLfWioBZ6MfARXdlBV97ZS8qC1dpue2ScvOoMU/lqL/syDEgFqXGGwQKe1eyFodWj19PmzVVtroTqnb0BHkeX7tFV2LDpCxtDhkSkWEhDpcUH7SFr0gs9NGMz1NZ6vdhUqvVbKa6pm2BNWpQftac49bB52Gq3znxR5Q4TjRTqk2KCnWFuO7mgOxPUIg3IuhPfBuhExw/bu9U0tivpQDddTqS5+RLagUnwstVfW0guYe6B6b4qGtKAGSCsTO43SV1lZP+FvvjmPCXf7YNt068SaDpO1tS6gSgFGGehKCt9lpdSAG1wHH3pjxeLU4aj9kxKU7l6wc2dM6Du51rP2Hu9NPjQmCKIrpW/+rzFZJ75OTTTw9Tn7G8fxxLUpbzHQZsWotQ1Wcm6nUiRUSu/Mqh9g4=
+
 matrix:
   fast_finish: true
   allow_failures:
   - env: EMBER_TRY_SCENARIO=ember-release
   - env: EMBER_TRY_SCENARIO=ember-beta
   - env: EMBER_TRY_SCENARIO=ember-canary
+
 before_install:
-- npm config set spin false
-- npm install -g coveralls pr-bumper
-- pr-bumper check
-install:
-- npm install
-- bower install
-before_script:
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
-- sleep 3 # give xvfb some time to start
+- npm config set spin false
+- npm install -g coveralls pr-bumper
+
+install:
+- $(npm root -g)/pr-bumper/.travis/maybe-install.sh
+
 script:
-- npm run lint
-- ember try:one $EMBER_TRY_SCENARIO --- ember test
+- $(npm root -g)/pr-bumper/.travis/maybe-test.sh
+- $(npm root -g)/pr-bumper/.travis/maybe-bump-version.sh
+
 after_success:
-- .travis/publish-coverage.sh
-before_deploy:
-- pr-bumper bump
+- $(npm root -g)/pr-bumper/.travis/maybe-publish-coverage.sh
+
 deploy:
   provider: npm
   email: npm.ciena@gmail.com
@@ -68,12 +69,14 @@ deploy:
   api_key:
     secure: uyN45Z38R7f4qtCpCK/hJyGIHzAWAu784ShTjYYruX6YZaFvnfeWTUU1vDTiYO06WUNAqJ7ZXszKMtTyFHg+/YsNAb7bxl6K3JyDJ5IYzQJBckRLNrKGqLd6l9BcxCaV2NsZP5Jk1CrgK2k4P1CCrGe7N+duQOdEGhEIRvNVWRsulm+994Blq7BNHWrDv2lExmmYBbLdfszX+Jgfw6qt2Onl4cOmkExGlia8oxkZkItUsU7/F3vPEqBDt38JdBwhpnMd00zMZglcN8hc4Wo9ae9ijahDARvKArry/clqL3IMi/5fdm3R0Ltu68dFy0mDr+0/H17QTOn4a81BFCAvgZyXVQhgrwdLQmYd5HmZm6CEldB87Th0dkpIlcvP7Bcm8NoFjWpEv9UplKpVDCy8tfw4ryBfyvJ35gka8AWWugcrQbjmv/9DnEqNMHCvw3+8WGAKXvtEDmq8BMWl25kXyquruW1Wq79Q3Xmz+ubaleahevWlBMIAUh22uQ1fsn3M/yjCyLdmNi4r9D3Tdxr60szEtONcmxUOacTjuDbQgcA5wgZzP1osrXySesw9YK5iv0wWg5oDNIsdE1tiVidAfxANGBV18VtavR4SZqAfPXpn8yvmRzh2qRTptPvSK5q77Cdf4wdpEaUbn8pTsQz8NHhhoz4QiZwQlKvU6yCuk2Q=
   on:
-    branch: master
+    all_branches: true
     condition: "$EMBER_TRY_SCENARIO = 'default'"
     node: 'stable'
-    tags: false
+    tags: true
+
 after_deploy:
 - .travis/publish-gh-pages.sh
+
 notifications:
   slack:
     secure: zNkwdmH5ujUhN7y2vnGB3TUWfh+zmieQ1Uh5ieZqUk6RFlSPZzNarci8w7r8Ph+8uUKnifMKs551CSoeNq7U6Zu0i9axNYz1UKyb/ck5kiSgkZRRPik554xpFlUuwM+ikScLJHTWyP+pwHG1mlZZ0qrqPC15UCujTUvQxsHvLGzgxLLVWGG5OVYvFxAYvaXw/ooMhJTQSQaAjzD+Os5hF0usvWy+6/sViANU+2uVHdCy53GpvmUeZVjlF2oupocVgF/wa8h6lgNR1ZojN++tZbUClan+soM0GAlnT2ravj0DBM+yQD1nExkqsmdNecxXNTcQGqKnYxJW/kYwWHCYG7r7k3z0UCyu093HZeJZa1+MUuEVjALOhkLR73VJymcpcy6Yz4A8jZikRk7nrrrmTKErJdAeobUBFTAIimRYmRHHuEapPKEsFCmOyG9a3MA7ZeFITtzv5R3otnOWxyndpIgKHlNFZlVwx0ghgL0Z80XRlJmqnbWKmg4w3wYQueQ4/iQGBTzlcjWz3ZQfn6bD5Tb5Nvdq/MWHREWgQhGgwWZnoKXYViSCUHC1Ilyv0182efLoPA6B0Z1+1ukQ6d4WsHOt4tLjFf/52jz5mit+iMdGp6SWTJ/fGJKBIs08YtBiwEVYwFSmPPdyVKp0a/2z3XLO798mYZ5z/slcJqYjV8Q=

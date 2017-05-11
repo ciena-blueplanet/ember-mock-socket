@@ -1,3 +1,9 @@
+# 0.1.4 (2017-05-11)
+
+* **Updated** the secure auth tokens in `.travis.yml`
+* **Added** `.pr-bumper.json`
+
+
 # 0.1.3
 
 * **Updated** CI to test both Chrome and Firefox.

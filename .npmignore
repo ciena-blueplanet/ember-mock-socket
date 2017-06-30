@@ -1,6 +1,7 @@
 /.travis
 /bower_components
 /config
+/config/ember-try.js
 /dist
 /tests
 /tmp
@@ -10,6 +11,7 @@
 .ember-cli
 .eslintignore
 .eslintrc
+.eslintrc.js
 .github
 .gitignore
 .jshintrc

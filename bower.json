@@ -1,6 +1,5 @@
 {
   "name": "ember-mock-socket",
   "dependencies": {
-    "ember-mocha-adapter": "~0.3.1"
   }
 }

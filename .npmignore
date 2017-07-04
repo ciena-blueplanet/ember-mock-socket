@@ -19,6 +19,7 @@
 .travis
 .travis.yml
 .watchmanconfig
+bower.json
 dependency-snapshot.json
 ember-cli-build.js
 testem.js

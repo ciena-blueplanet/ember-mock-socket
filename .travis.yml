@@ -14,24 +14,12 @@ addons:
     packages:
     - google-chrome-stable
     - g++-4.8
-  firefox: 'latest-esr'
 
 env:
   matrix:
-  - EMBER_TRY_SCENARIO=ember-1-12
-  - EMBER_TRY_SCENARIO=ember-1-13
-  - EMBER_TRY_SCENARIO=ember-2-0
-  - EMBER_TRY_SCENARIO=ember-2-1
-  - EMBER_TRY_SCENARIO=ember-2-2
-  - EMBER_TRY_SCENARIO=ember-2-3
-  - EMBER_TRY_SCENARIO=ember-2-4
-  - EMBER_TRY_SCENARIO=ember-2-5
-  - EMBER_TRY_SCENARIO=ember-2-6
-  - EMBER_TRY_SCENARIO=ember-2-7
-  - EMBER_TRY_SCENARIO=ember-2-8
-  - EMBER_TRY_SCENARIO=ember-2-9
-  - EMBER_TRY_SCENARIO=ember-2-10
-  - EMBER_TRY_SCENARIO=default
+  - EMBER_TRY_SCENARIO=ember-lts-2.4
+  - EMBER_TRY_SCENARIO=ember-lts-2.8
+  - EMBER_TRY_SCENARIO=ember-default
   - EMBER_TRY_SCENARIO=ember-release
   - EMBER_TRY_SCENARIO=ember-beta
   - EMBER_TRY_SCENARIO=ember-canary
@@ -45,22 +33,28 @@ matrix:
   - env: EMBER_TRY_SCENARIO=ember-release
   - env: EMBER_TRY_SCENARIO=ember-beta
   - env: EMBER_TRY_SCENARIO=ember-canary
+  - node_js: 'stable'
 
 before_install:
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
 - npm config set spin false
-- npm install -g coveralls pr-bumper
+- npm install -g coveralls pr-bumper@^1.0.0
+- $(npm root -g)/pr-bumper/.travis/maybe-check-scope.sh
 
 install:
 - $(npm root -g)/pr-bumper/.travis/maybe-install.sh
 
+before_script:
+- "export DISPLAY=:99.0"
+- "sh -e /etc/init.d/xvfb start"
+- sleep 3 # give xvfb some time to start
+
 script:
 - $(npm root -g)/pr-bumper/.travis/maybe-test.sh
-- if [ $EMBER_TRY_SCENARIO == "default" ]; then $(npm root -g)/pr-bumper/.travis/maybe-bump-version.sh; fi
+- .travis/maybe-bump-version.sh
 
 after_success:
-- $(npm root -g)/pr-bumper/.travis/maybe-publish-coverage.sh
+- .travis/maybe-publish-coverage.sh
+- .travis/maybe-publish-gh-pages.sh
 
 deploy:
   provider: npm
@@ -70,12 +64,9 @@ deploy:
     secure: WpK7AxnPk8tPgEEWqq7c6u9owwfvge5JwdWlvKxbBavCDfrOEkzxHytCXgsXi3svEMUPpvEfZgQB8d1dVIox9lHypKiDv0gspE3lyVcUhoWjTajJ63DhF6qtwxCugmEH3RnkePyPL4nNx1EwbEexDkL1Km2Kl1eoo7fRBq5SHd/NFXE3D9tcMK4DNmHKEM70w/X58zYIimG4sIE/jjTdHnayuJcKclc698eGP8770DzrFxPsdZS2Ki3qixvjw33MpyUIcVEHldRy9sooknMM1UH/0fnim4+yKugwedZ6Dfn2oiyPZ6jWXJSMWRKXaxLCaijba75eTu+CH27SJgm6LHRfK15V1CqXr2nbq1BEUIEJfbJ66RNSMeX12pyM8Zxecknx9wvEbZvoOt4a5ImV5ulDDQB5yUWmt7MS3d+WlHt6kqUw0SFnNXQyfyIMgsB1cqKFJLbXf+8VbvUUvhWQEkryLL4rzc4ukB0KzU+AuKsLxbThgX8lKbUyWpwrndPF9BOe8Tys8jjlLz0WMc4BeADWOLuU2pXa6y3tbf21i51o3fh9SweBQZclyIr6aGJPaphRjubXc4gKYZ0P1wdQFXAJhqyAJafvdhQYBzMlnUI3tXiJrV2i37opMg/ApAn+t5zDki32GpzQZjSasYyrQU2GFaE6PEcbgD9sCSp/Qg0=
   on:
     all_branches: true
-    condition: "$EMBER_TRY_SCENARIO = 'default'"
-    node: 'stable'
+    condition: "$EMBER_TRY_SCENARIO = 'ember-default'"
+    node: '6.9.1'
     tags: true
-
-after_deploy:
-- .travis/publish-gh-pages.sh
 
 notifications:
   slack:

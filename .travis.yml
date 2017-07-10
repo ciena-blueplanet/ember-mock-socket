@@ -14,12 +14,15 @@ addons:
     packages:
     - google-chrome-stable
     - g++-4.8
-  firefox: 'latest-esr'
 
 env:
   matrix:
+  - EMBER_TRY_SCENARIO=ember-lts-2.4
   - EMBER_TRY_SCENARIO=ember-lts-2.8
   - EMBER_TRY_SCENARIO=ember-default
+  - EMBER_TRY_SCENARIO=ember-release
+  - EMBER_TRY_SCENARIO=ember-beta
+  - EMBER_TRY_SCENARIO=ember-canary
   global:
     - CXX=g++-4.8
     - secure: DCaFlg71rn/5GdXboHfo+S56aq1xQD1DprovtzoUVqWhEC+88+9X5PRAn3rj+2IVewIUmUXwsMonRAJhj7GWGcFBj/277qiPbOKDJZCBWZcMEWkCRy+KZAXAqJYbg6MEGmSnuuCjJ0n0MDp2nClaQBSvRfuVvGqTWvG//YEnXzLpj3KlsIlBQXCGFLiHWExGT2iMFWCb+O+kPEN8Kw/PP/c3F00LaBH4n1azx2h0Wq2Gv5L2BiWj37lFroIXrKrwSmjHQwsgafSJbqHaamCe9L9VcYg2+8hFbi2ijpmn4a2/YpJmUcnbhFsEHcl3SjARNQ3AvlS6+7+E3iF6LYHBxsJ6Ai5/STDmDTTy3BsH4fu6YY8i0oeJv/kFJl78pT+lCwwtTdFhok3Zp1d6MyWZVwk1DouhYn1lGVPNjalFvJ0TvnJ3ldouUX1vbl5cHl5CfHioVSJheDv8+zY2KA6gd1QeqfQHTLuz8BqcO8zlgvpmVSLi0B1mE1euxlK0w4befnor3T3QvsZZEM6jBkcedNi4Jx1jWwsprWVVVuG/+M+PvAXyBEuzd6/QNKSn/z3GURZ8z5SG3Ytsa9pjvXtgIZa+owGw97THLQCQUSbxYq1xN9uXGs2ukIyAxChClDDUbWsOw3YZgBW8FklLNqRJgPjKW995AysjUBcRm+S5TDg=
@@ -33,20 +36,25 @@ matrix:
   - node_js: 'stable'
 
 before_install:
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
 - npm config set spin false
-- npm install -g coveralls pr-bumper
+- npm install -g coveralls pr-bumper@^1.0.0
+- $(npm root -g)/pr-bumper/.travis/maybe-check-scope.sh
 
 install:
 - $(npm root -g)/pr-bumper/.travis/maybe-install.sh
 
+before_script:
+- "export DISPLAY=:99.0"
+- "sh -e /etc/init.d/xvfb start"
+- sleep 3 # give xvfb some time to start
+
 script:
 - $(npm root -g)/pr-bumper/.travis/maybe-test.sh
-- if [ $EMBER_TRY_SCENARIO == "default" ]; then $(npm root -g)/pr-bumper/.travis/maybe-bump-version.sh; fi
+- .travis/maybe-bump-version.sh
 
 after_success:
-- $(npm root -g)/pr-bumper/.travis/maybe-publish-coverage.sh
+- .travis/maybe-publish-coverage.sh
+- .travis/maybe-publish-gh-pages.sh
 
 deploy:
   provider: npm
@@ -57,11 +65,8 @@ deploy:
   on:
     all_branches: true
     condition: "$EMBER_TRY_SCENARIO = 'ember-default'"
-    node: 'stable'
+    node: '6.9.1'
     tags: true
-
-after_deploy:
-- .travis/publish-gh-pages.sh
 
 notifications:
   slack:

@@ -1,3 +1,27 @@
+# 0.2.0 (2018-02-02)
+* **Added** `bower` @ `^1.8.2` since no longer included with Ember CLI
+* **Added** ignore the linting of the `CHANGELOG.md`
+* **Added** ignoring of `package-lock` until we are ready to move to node 8
+* **Added** ignoring of `.DS_Store` files
+* **Added** ignoring of `/typings` directory
+* **Removed** useLintTree ember-cli-mocha configuration from `ember-cli-build.js`
+* **Added** `ember-frost-test` @ `^4.0.0`
+* **Added** `chai-jquery` @ `^2.0.0`
+* **Updated** `ember-cli-chai` to `0.4.3`
+* **Updated** `ember-cli-mocha` to `0.14.4`
+* **Added** `ember-hook` @ `1.4.2`
+* **Added** `ember-sinon` @ `^0.7.0`
+* **Updated** `ember-test-utils` to `^8.1.0`
+* **Added** `sinon-chai` @ `^2.14.0`
+* **Updated** `ember-cli-htmlbars-inline-precompile` to `0.3.12`
+* **Added** `broccoli-funnel` @ `^2.0.1`
+* **Updated** `broccoli-merge-trees` to `^2.0.0`
+* **Updated** `mock-socket` to `^6.1.0` and moved from devDependency to dependency
+* **Removed** the blueprint file since packages are now included via dependencies
+* **Updated** to add `mock-socket` to vendor tree and created module shim so that it can be imported
+* **Updated** `npm run test` to not include running of code coverage since it is not installed
+
+
 # 0.1.5 (2017-07-10)
 
 Upgrade Ember-cli to 2.12.3

@@ -3,7 +3,7 @@ import {describe, it} from 'mocha'
 import MockSocket from 'mock-socket'
 
 describe('mock-socket', function () {
-  it('is a single module that has been exported', function () {
+  it('should have a single module that has been exported', function () {
     expect(typeof MockSocket).to.equal('object')
   })
 
@@ -13,7 +13,7 @@ describe('mock-socket', function () {
     'WebSocket'
   ]
     .forEach((key) => {
-      it(`has ${key} method`, function () {
+      it(`should have a ${key} method`, function () {
         expect(typeof MockSocket[key]).to.equal('function')
       })
     })

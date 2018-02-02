@@ -1,24 +1,32 @@
 /* eslint-env node */
 'use strict'
 
-const mergeTrees = require('broccoli-merge-trees')
+const Funnel = require('broccoli-funnel')
+const MergeTrees = require('broccoli-merge-trees')
 const path = require('path')
 
 module.exports = {
   name: 'mock-socket',
 
-  treeForAddon (tree) {
-    const mockSocketPath = path.dirname(require.resolve('mock-socket/src/index.js'))
-    const mockSocketTree = this.treeGenerator(mockSocketPath)
-
-    if (!tree) {
-      return this._super.treeForAddon.call(this, mockSocketTree)
+  included: function (app) {
+    // Addons - see: https://github.com/ember-cli/ember-cli/issues/3718
+    if (typeof app.import !== 'function' && app.app) {
+      this.app = app = app.app
     }
 
-    const trees = mergeTrees([mockSocketTree, tree], {
-      overwrite: true
+    this._super.included.apply(this, app)
+
+    if (app) {
+      app.import(path.join('vendor', 'mock-socket.js'))
+      app.import(path.join('vendor', 'shims', 'mock-socket.js'))
+    }
+  },
+
+  treeForVendor: function (vendorTree) {
+    const packageTree = new Funnel(path.join(this.project.root, 'node_modules', 'mock-socket', 'dist'), {
+      files: ['mock-socket.js']
     })
 
-    return this._super.treeForAddon.call(this, trees)
+    return new MergeTrees([vendorTree, packageTree])
   }
 }

@@ -1,3 +1,15 @@
+# 0.2.1 (2018-03-23)
+* **Updated** pull request template
+* **Added** issue template
+* **Updated** to `pr-bumper` version `3`
+* **Updated** to node 8
+* **Added** slack integration
+* **Updated** `ember-frost-test` to `^4.0.1`
+* **Updated** `ember-test-utils` to `^8.1.1`
+* **Removed** ignoring of `package-lock.json` file
+* **Added** `package-lock.json` file
+* **Updated** Travis CI scripts to allow non-exact node version
+
 # 0.2.0 (2018-02-02)
 * **Added** `bower` @ `^1.8.2` since no longer included with Ember CLI
 * **Added** ignore the linting of the `CHANGELOG.md`
